@@ -22,18 +22,8 @@
 	* L_DecimalFixed - https://wiki.srb2.org/wiki/User:Clairebun/Sandbox/Common_Lua_Functions
 */
 
-local BOAT_2POINT4 = false
-local function checkVersion()
-	BOAT_2POINT4 = (SUBVERSION >= 4)
-end
-
-addHook("MapLoad",checkVersion)
-addHook("NetVars",function(n) BOAT_2POINT4 = n($); end)
-checkVersion()
-
-if BOAT_2POINT4
-	error("BoatMode is unsupported in 2.4.",2) --for now...
-end
+if rawget(_G, "BOATMODE") then return end
+rawset(_G, "BOATMODE", true)
 
 -- no tofixed in rr unfortunately
 -- https://wiki.srb2.org/wiki/User:Clairebun/Sandbox/Common_Lua_Functions
@@ -1632,8 +1622,7 @@ addHook("PostThinkFrame",do
 		
 		if p.boatdriving
 			animroutine(p,me)
-			--cant set p->outrun here since its Unexposed!! Yay!!!
-			--so try not to use charger panels :p
+			p.outrun = 0
 		end
 		
 		if me.boat_transform ~= nil
